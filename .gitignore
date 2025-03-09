@@ -1,3 +1,4 @@
 venv
 Todo.txt
 __pycache__/**
+processed_data.pth

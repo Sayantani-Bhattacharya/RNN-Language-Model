@@ -42,7 +42,6 @@ def data_processing():
     
     # Count word frequencies in training data
     word_counts = Counter(train_tokens)
-    # vocab_size = 10_000
     most_common_words = word_counts.most_common(10000)
 
     # Add special token for unknown words
@@ -79,10 +78,10 @@ def data_processing():
     valid_indices = tokens_to_indices(valid_tokens, word_to_index)
     test_indices = tokens_to_indices(test_tokens, word_to_index)
 
-    # # Print sample of converted indices
-    # print("Train Indices Sample:", train_indices[:20])
-    # print("Valid Indices Sample:", valid_indices[:20])
-    # print("Test Indices Sample:", test_indices[:20])
+    # # # Print sample of converted indices
+    # print("Train Indices Sample:", train_indices[:2])
+    # print("Valid Indices Sample:", valid_indices[:2])
+    # print("Test Indices Sample:", test_indices[:2])
 
     # Sanity check: Ensure all indices are within the vocabulary size
     assert max(train_indices) < len(word_to_index), f"Index out of bounds! Max index: {max(train_indices)}, Vocab size: {len(word_to_index)}"
