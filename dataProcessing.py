@@ -1,8 +1,6 @@
 import torch
 import torch.nn as nn
 from torch.utils.data import TensorDataset, DataLoader
-# from rnn import RNN
-# import torch.optim as optim
 from collections import Counter
 
 
@@ -44,21 +42,31 @@ def data_processing():
     
     # Count word frequencies in training data
     word_counts = Counter(train_tokens)
-    vocab_size = 10_000
-    most_common_words = word_counts.most_common(vocab_size)
-
-    # Create word-to-index mapping
-    word_to_index = {word: idx for idx, (word, _) in enumerate(most_common_words, start=1)}
+    # vocab_size = 10_000
+    most_common_words = word_counts.most_common(10000)
 
     # Add special token for unknown words
-    word_to_index["<unk>"] = 0
+
+    # Create word-to-index mapping
+    word_to_index = {"<unk>": 0}
+
+    # Create word-to-index mapping
+    for idx, (word, _) in enumerate(most_common_words, start=1):
+        word_to_index[word] = idx
+
+    word_to_index[0] = "<unk>"
+
+    if "<unk>" not in word_to_index:
+        print("Warning: <unk> token is missing!")
+    if word_to_index["<unk>"] != 0:
+        print("Error: <unk> token is at index", word_to_index["<unk>"])
+
 
     # Reverse mapping for index-to-word conversion (useful for decoding)
     index_to_word = {idx: word for word, idx in word_to_index.items()}
-
+    print("most common words length:", len(most_common_words))
     print("Vocabulary Size:", len(word_to_index))  # Should be 10,001 including <unk>
-
-
+    
 
     ########## Step 4: Convert Tokens to Indexes ##########
 
@@ -71,10 +79,17 @@ def data_processing():
     valid_indices = tokens_to_indices(valid_tokens, word_to_index)
     test_indices = tokens_to_indices(test_tokens, word_to_index)
 
-    # Print sample of converted indices
-    print("Train Indices Sample:", train_indices[:20])
-    print("Valid Indices Sample:", valid_indices[:20])
-    print("Test Indices Sample:", test_indices[:20])
+    # # Print sample of converted indices
+    # print("Train Indices Sample:", train_indices[:20])
+    # print("Valid Indices Sample:", valid_indices[:20])
+    # print("Test Indices Sample:", test_indices[:20])
+
+    # Sanity check: Ensure all indices are within the vocabulary size
+    assert max(train_indices) < len(word_to_index), f"Index out of bounds! Max index: {max(train_indices)}, Vocab size: {len(word_to_index)}"
+    print(f"Max train index: {max(train_indices)}, Vocab size: {len(word_to_index)}")
+    print(f"Max valid index: {max(valid_indices)}, Vocab size: {len(word_to_index)}")
+    print(f"Max test index: {max(test_indices)}, Vocab size: {len(word_to_index)}")
+
 
 
     ########## Step 5: Convert Indexed Data into Sequences for Model Input ##########    
