@@ -7,6 +7,8 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 from model import RNNLanguageModel
+from dataProcessing import data_processing
+import matplotlib.pyplot as plt
 
 
 # Load processed data from your dataProcessing step.
@@ -65,6 +67,8 @@ for epoch in range(1, epochs + 1):
     
     avg_loss = total_loss / len(train_loader)
     perplexity = torch.exp(torch.tensor(avg_loss))
+    train_losses.append(avg_loss)
+    train_perplexities.append(perplexity.item())
     print(f"Epoch {epoch}/{epochs} - Loss: {avg_loss:.4f} - Perplexity: {perplexity:.2f}")
     
     # Evaluate on validation data.
@@ -84,6 +88,8 @@ for epoch in range(1, epochs + 1):
             valid_loss += loss.item()
     avg_valid_loss = valid_loss / len(valid_loader)
     valid_perplexity = torch.exp(torch.tensor(avg_valid_loss))
+    valid_losses.append(avg_valid_loss)
+    valid_perplexities.append(valid_perplexity.item())
     print(f"Validation - Loss: {avg_valid_loss:.4f} - Perplexity: {valid_perplexity:.2f}")
 
 # Save the trained model weights.
@@ -92,5 +98,24 @@ torch.save(model.state_dict(), 'weights/rnn_language_model.pth')
 
 print("Model training complete and weights saved.")
 
+# Plot loss and perplexity
+plt.figure(figsize=(12, 5))
 
+plt.subplot(1, 2, 1)
+plt.plot(range(1, epochs + 1), train_losses, label='Train Loss')
+plt.plot(range(1, epochs + 1), valid_losses, label='Valid Loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.title('Loss Over Epochs')
+plt.legend()
 
+plt.subplot(1, 2, 2)
+plt.plot(range(1, epochs + 1), train_perplexities, label='Train Perplexity')
+plt.plot(range(1, epochs + 1), valid_perplexities, label='Valid Perplexity')
+plt.xlabel('Epochs')
+plt.ylabel('Perplexity')
+plt.title('Perplexity Over Epochs')
+plt.legend()
+
+plt.tight_layout()
+plt.savefig('training_plot.png')
