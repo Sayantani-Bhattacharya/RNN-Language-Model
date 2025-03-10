@@ -19,7 +19,7 @@ class RNNLanguageModel(nn.Module):
         self.rnn = nn.RNN(embedding_dim, hidden_dim, num_layers=1,
                           dropout=dropout, batch_first=True)
         # Dropout layer (note: dropout in RNN is effective only for num_layers>1)
-        # self.dropout = nn.Dropout(dropout)                                       ######################3 commented this.
+        self.dropout = nn.Dropout(dropout)                                      
         # Fully connected layer: maps RNN output to vocabulary size.
         self.fc = nn.Linear(hidden_dim, vocab_size)
 
@@ -30,7 +30,7 @@ class RNNLanguageModel(nn.Module):
         # Pass through the RNN.
         output, hidden = self.rnn(emb, hidden)  # output: (batch_size, seq_length, hidden_dim)
         # Apply dropout.
-        # output = self.dropout(output)  ##########################################################3 commented this.
+        output = self.dropout(output)  
         # Get logits for each token.
         logits = self.fc(output)  # (batch_size, seq_length, vocab_size)
         return logits, hidden

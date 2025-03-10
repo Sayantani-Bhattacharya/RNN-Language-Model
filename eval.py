@@ -21,7 +21,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Initialize the model and load the saved weights.
 model = RNNLanguageModel(vocab_size, embedding_dim, hidden_dim, dropout).to(device)
-model.load_state_dict(torch.load("rnn_language_model.pth", map_location=device))
+model.load_state_dict(torch.load("weights/rnn_language_model.pth", map_location=device))
 model.eval()
 
 criterion = nn.CrossEntropyLoss()

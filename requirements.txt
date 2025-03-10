@@ -1,4 +1,5 @@
 pip3 install torch
 pip3 install rnn
 pip3 install datasets
+pip3 install matplotlib
 
