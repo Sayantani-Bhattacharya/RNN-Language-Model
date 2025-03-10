@@ -40,11 +40,22 @@ Inapplicability for Single Layer RNNs: Although dropout is only effective when n
 - Reasoning: A larger vocabulary allows for more diverse token representations, but it increases the complexity of the model. This value is chosen based on the dataset and needs to be set appropriately for the application.
 
 
-## Learning curves of perplexity vs. epoch on the training and validation sets:
+## Learning curves:
+<p align="center">
+  <img src="/results/training_plot.png" alt="Alt text" width="700"/>
+</p>
 
-## Final test set perplexity
+
+## Final test result achieved:
+### Test Loss: 4.5823 & Test Perplexity: 97.73
+
+    python3 eval.py
+
 
 ## Improvement stategies:
+
+Vannilla RNNs have the issue of vanishing gradient, where the gradients of initial epochs are multiplied by increasingly smaller numbers, and thus the model barely in later stages learn from them.
+To prevent this LSTMs are used (Long Short Term-Memory).
 
 ## Points to Note:
 
