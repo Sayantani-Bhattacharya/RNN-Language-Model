@@ -5,9 +5,17 @@
 import torch
 import torch.nn as nn
 from model import RNNLanguageModel
+from dataProcessing import data_processing
 
-# Load processed data to get the test loader and vocabulary size.
-data = torch.load("processed_data.pth", weights_only=False)
+# Load processed data from your dataProcessing step.
+try:
+    data = torch.load("processed_data.pth", weights_only=False)
+except FileNotFoundError:
+    print("processed_data.pth not found! Running the data processing step first.")
+    data_processing()
+    data = torch.load("processed_data.pth", weights_only=False)
+
+
 test_loader = data['test_loader']
 # vocab_size = data['vocab_size']
 vocab_size = data.get('vocab_size', 10001)

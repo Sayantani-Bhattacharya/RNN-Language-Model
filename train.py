@@ -12,9 +12,13 @@ import matplotlib.pyplot as plt
 
 
 # Load processed data from your dataProcessing step.
-############# add option to build the .pth if not already present.
+try:
+    data = torch.load("processed_data.pth", weights_only=False)
+except FileNotFoundError:
+    print("processed_data.pth not found! Running the data processing step first.")
+    data_processing()
+    data = torch.load("processed_data.pth", weights_only=False)
 
-data = torch.load("processed_data.pth", weights_only=False)
 train_loader = data['train_loader']
 valid_loader = data['valid_loader']
 vocab_size = data.get('vocab_size', 10001)
@@ -38,6 +42,12 @@ criterion = nn.CrossEntropyLoss()
 def detach_hidden(hidden):
     # Detach hidden state to prevent backpropagating through the entire history.
     return hidden.detach()
+
+
+# Store loss values for plotting
+train_losses, valid_losses = [], []
+train_perplexities, valid_perplexities = [], []
+
 
 print("Starting training...")
 for epoch in range(1, epochs + 1):
